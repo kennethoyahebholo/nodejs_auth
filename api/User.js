@@ -114,7 +114,7 @@ router.post("/signin", (req, res) => {
   } else {
     User.find({ email })
       .then((data) => {
-        if (data) {
+        if (data?.length) {
           // user exist
           const hashedPassword = data[0].password;
           bcrypt
