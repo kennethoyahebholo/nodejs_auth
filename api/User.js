@@ -98,10 +98,14 @@ router.post("/signup", (req, res) => {
     User.find({ email })
       .then((result) => {
         if (result.length) {
-          res.json({
-            status: "FAILED",
-            message: "User with the provided email already exists",
-          });
+          if (!result.isVerified) {
+            sendVerificationEmail(result, res);
+          } else {
+            res.json({
+              status: "FAILED",
+              message: "User with the provided email already exists",
+            });
+          }
         } else {
           // Try Create new user
 
