@@ -9,9 +9,6 @@ const User = require("./../models/User");
 //mongodb user verification model
 const UserVerification = require("./../models/UserVerification");
 
-//email handler
-const nodemailer = require("nodemailer");
-
 //email unique string
 const { v4: uuidv4 } = require("uuid");
 
@@ -20,6 +17,9 @@ const path = require("path");
 
 // Password handler
 const bcrypt = require("bcrypt");
+//email handler
+
+const nodemailer = require("nodemailer");
 
 //nodemailer transporter
 let transporter = nodemailer.createTransport({
