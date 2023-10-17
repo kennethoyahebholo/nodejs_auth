@@ -42,26 +42,46 @@ transporter.verify((error, success) => {
 
 // sign up
 router.post("/signup", (req, res) => {
-  let { name, email, password, dateOfBirth } = req.body;
-  name = name.trim();
+  let { firstName, lastName, email, phoneNumber, dateOfBirth, password } =
+    req.body;
+  firstName = firstName.trim();
+  lastName = lastName.trim();
   email = email.trim();
-  password = password.trim();
+  phoneNumber = phoneNumber.trim();
   dateOfBirth = dateOfBirth.trim();
+  password = password.trim();
 
-  if (name === "" || email === "" || password === "" || dateOfBirth === "") {
+  if (
+    firstName === "" ||
+    lastName === "" ||
+    email === "" ||
+    phoneNumber === "" ||
+    dateOfBirth === "" ||
+    password === ""
+  ) {
     res.json({
       status: "FAILED",
       message: "Empty Input Fields!",
     });
-  } else if (!/^[a-zA-Z ]*$/.test(name)) {
+  } else if (!/^[a-zA-Z ]*$/.test(firstName)) {
     res.json({
       status: "FAILED",
-      message: "Invalid name entered",
+      message: "Invalid first name entered",
+    });
+  } else if (!/^[a-zA-Z ]*$/.test(lastName)) {
+    res.json({
+      status: "FAILED",
+      message: "Invalid last name entered",
     });
   } else if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
     res.json({
       status: "FAILED",
       message: "Invalid email entered",
+    });
+  } else if (!/^[0-9]{11}$/.test(phoneNumber)) {
+    res.json({
+      status: "FAILED",
+      message: "Invalid phone number entered (11 digits required)",
     });
   } else if (!new Date(dateOfBirth).getTime()) {
     res.json({
@@ -91,10 +111,12 @@ router.post("/signup", (req, res) => {
             .hash(password, saltRounds)
             .then((hashedPassword) => {
               const newUser = new User({
-                name,
+                firstName,
+                lastName,
                 email,
-                password: hashedPassword,
                 dateOfBirth,
+                phoneNumber,
+                password: hashedPassword,
                 isVerified: false,
               });
 
@@ -134,7 +156,7 @@ router.post("/signup", (req, res) => {
 // send verification
 const sendVerificationEmail = ({ _id, email }, res) => {
   // url to be used in the email
-  const currentUrl = "http://localhost:5000/";
+  const currentUrl = process.env.BASE_URL || "http://localhost:5000/";
 
   const uniqueString = uuidv4() + _id;
 
