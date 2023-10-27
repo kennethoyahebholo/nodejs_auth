@@ -21,6 +21,8 @@ const bcrypt = require("bcrypt");
 
 const nodemailer = require("nodemailer");
 
+const clientUrl = process.env.CLIENT_URL;
+
 //nodemailer transporter
 let transporter = nodemailer.createTransport({
   service: "gmail",
@@ -232,17 +234,17 @@ router.get("/verify/:userId/:uniqueString", (req, res) => {
               User.deleteOne({ _id: userId })
                 .then(() => {
                   let message = "Link has expired, please sign up again.";
-                  res.redirect(`/user/verified/error=true?&message=${message}`);
+                  window.location.href = `${clientUrl}auth/verified/error=true?&message=${message}`;
                 })
                 .catch(() => {
                   let message = "Clearing user with expired unique link failed";
-                  res.redirect(`/user/verified/error=true?&message=${message}`);
+                  window.location.href = `${clientUrl}auth/verified/error=true?&message=${message}`;
                 });
             })
             .catch(() => {
               let message =
                 "An error has occurred while clearing for expired user verification record";
-              res.redirect(`/user/verified/error=true?&message=${message}`);
+              window.location.href = `${clientUrl}auth/verified/error=true?&message=${message}`;
             });
         } else {
           // valid record exist
@@ -257,57 +259,64 @@ router.get("/verify/:userId/:uniqueString", (req, res) => {
                   .then(() => {
                     UserVerification.deleteOne({ userId })
                       .then(() => {
-                        res.sendFile(
-                          path.join(__dirname, "./../views/verified.html")
-                        );
+                        window.location.href = `${clientUrl}`;
+                        // res.sendFile(
+                        //   path.join(__dirname, "./../views/verified.html")
+                        // );
                       })
                       .catch(() => {
                         let message =
                           "An error has occurred while finalizing successful verification";
-                        res.redirect(
-                          `/user/verified/error=true?&message=${message}`
-                        );
+                        window.location.href = `${clientUrl}auth/verified/error=true?&message=${message}`;
+                        // res.redirect(
+                        //   `/user/verified/error=true?&message=${message}`
+                        // );
                       });
                   })
                   .catch((error) => {
                     console.log(error);
                     let message =
                       "An error has occurred while updating user verification record";
-                    res.redirect(
-                      `/user/verified/error=true?&message=${message}`
-                    );
+                    window.location.href = `${clientUrl}auth/verified/error=true?&message=${message}`;
+                    // res.redirect(
+                    //   `/user/verified/error=true?&message=${message}`
+                    // );
                   });
               } else {
                 // existing record, incorrect link
                 let message =
                   "Invalid verification details passed, check your inbox";
-                res.redirect(`/user/verified/error=true?&message=${message}`);
+                window.location.href = `${clientUrl}auth/verified/error=true?&message=${message}`;
+                // res.redirect(`/user/verified/error=true?&message=${message}`);
               }
             })
             .catch(() => {
               let message =
                 "An error has occurred while comparing unique strings";
-              res.redirect(`/user/verified/error=true?&message=${message}`);
+              window.location.href = `${clientUrl}auth/verified/error=true?&message=${message}`;
+              // res.redirect(`/user/verified/error=true?&message=${message}`);
             });
         }
       } else {
         let message =
           "Account record doesn't exist or has been verified already";
-        res.redirect(`/user/verified/error=true?&message=${message}`);
+        window.location.href = `${clientUrl}auth/verified/error=true?&message=${message}`;
+        // res.redirect(`/user/verified/error=true?&message=${message}`);
       }
     })
     .catch((err) => {
       console.log(err);
       let message =
         "An error has occurred while checking for existing user verification record";
-      res.redirect(`/user/verified/error=true?&message=${message}`);
+      window.location.href = `${clientUrl}auth/verified/error=true?&message=${message}`;
+      // res.redirect(`/user/verified/error=true?&message=${message}`);
     });
 });
 
 //verified route
-router.get("/verified", (req, res) => {
-  res.sendFile(path.join(__dirname, "./../views/verified.html"));
-});
+// router.get("/verified", (req, res) => {
+//   res.sendFile(path.join(__dirname, "./../views/verified.html"));
+// });
 
 // sign in
 router.post("/signin", (req, res) => {
