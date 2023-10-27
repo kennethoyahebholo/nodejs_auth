@@ -156,7 +156,7 @@ router.post("/signup", (req, res) => {
 // send verification
 const sendVerificationEmail = ({ _id, email }, res) => {
   // url to be used in the email
-  const currentUrl = process.env.BASE_URL;
+  const currentUrl = process.env.BASE_URL || "http://localhost:5000/";
 
   const uniqueString = uuidv4() + _id;
 
