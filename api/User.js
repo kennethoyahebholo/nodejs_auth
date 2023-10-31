@@ -389,7 +389,7 @@ router.post("/requestPasswordReset", (req, res) => {
       console.log(data, "111");
       console.log(data.length, "222");
       console.log(data[0].length, "333");
-      if (data.length) {
+      if (data.email) {
         // user exists
 
         // user has been verified
