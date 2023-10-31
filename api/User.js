@@ -386,8 +386,10 @@ router.post("/requestPasswordReset", (req, res) => {
   // check if email exist
   User.findOne({ email })
     .then((data) => {
-      console.log(data, data[0].length, data.length);
-      if (data[0].length) {
+      console.log(data, "111");
+      console.log(data.length, "222");
+      console.log(data[0].length, "333");
+      if (data.length) {
         // user exists
 
         // user has been verified
