@@ -9,11 +9,11 @@ const User = require("./../models/User");
 //mongodb user verification model
 const UserVerification = require("./../models/UserVerification");
 
+//mongodb password reset model
+const PasswordReset = require("./../models/PasswordReset");
+
 //email unique string
 const { v4: uuidv4 } = require("uuid");
-
-// path object
-const path = require("path");
 
 // Password handler
 const bcrypt = require("bcrypt");
@@ -180,7 +180,7 @@ const sendVerificationEmail = ({ _id, email }, res) => {
         userId: _id,
         uniqueString: hashedUniqueString,
         createdAt: Date.now(),
-        expiredAt: Date.now() + 21600000,
+        expiredAt: Date.now() + 3600000,
       });
 
       newVerification
@@ -314,11 +314,6 @@ router.get("/verify/:userId/:uniqueString", (req, res) => {
     });
 });
 
-//verified route
-// router.get("/verified", (req, res) => {
-//   res.sendFile(path.join(__dirname, "./../views/verified.html"));
-// });
-
 // sign in
 router.post("/signin", (req, res) => {
   let { email, password } = req.body;
@@ -383,5 +378,119 @@ router.post("/signin", (req, res) => {
       });
   }
 });
+
+// Password Reset
+router.post("/requestPasswordReset", (req, res) => {
+  const { email, redirectUrl } = req.body;
+
+  // check if email exist
+  User.findOne({ email })
+    .then((data) => {
+      if (data.length) {
+        // user exists
+
+        // user has been verified
+        if (!data[0].isVerified) {
+          res.json({
+            status: "FAILED",
+            message: "Email hasn't been verified yet, check you inbox",
+          });
+        } else {
+          // proceed with reset password
+          sendResetEmail(data[0], redirectUrl, res);
+        }
+      } else {
+        res.json({
+          status: "FAILED",
+          message: "Invalid email entered",
+        });
+      }
+    })
+    .catch((err) => {
+      console.log(err.message);
+      res.json({
+        status: "FAILED",
+        message: "An error has occurred while checking for existing user",
+      });
+    });
+});
+
+const sendResetEmail = ({ _id, email }, redirectUrl, res) => {
+  const resetString = uuidv4 + _id;
+
+  PasswordReset.deleteMany({ userId: _id })
+    .then((result) => {
+      // reset records deleted successfully
+
+      // send the reset email
+      const mailOptions = {
+        from: process.env.AUTH_EMAIL,
+        to: email,
+        subject: "Password Reset",
+        html: `<p>We heard you lost your password</p><p>Don't worry use this link to reset your password</p><p>This link <b>expires in 60 minutes</b>.<p>Press <a href=${
+          redirectUrl + "/" + _id + "/" + resetString
+        } target="_blank"> to proceed</a></p></p>`,
+      };
+
+      //hash the researchString
+
+      const saltRounds = 10;
+      bcrypt
+        .hash(resetString, saltRounds)
+        .then((hashedResetString) => {
+          const newPasswordReset = new PasswordReset.create({
+            userId: _id,
+            resetString: hashedResetString,
+            createdAt: Date.now(),
+            expiredAt: Date.now() + 3600000,
+          });
+
+          newPasswordReset
+            .save()
+            .then(() => {
+              transporter
+                .sendMail(mailOptions)
+                .then(() => {
+                  res.json({
+                    status: "PENDING",
+                    message: "Password reset email sent",
+                  });
+                })
+                .catch((error) => {
+                  console.log(error.message);
+                  res.json({
+                    status: "FAILED",
+                    message:
+                      "An error has occurred while sending password reset email",
+                  });
+                });
+            })
+            .catch((error) => {
+              console.log(error.message);
+              res.json({
+                status: "FAILED",
+                message:
+                  "An error has occurred while saving password reset record",
+              });
+            });
+        })
+        .catch((error) => {
+          console.log(error.message);
+
+          res.json({
+            status: "FAILED",
+            message: "An error has occurred while hashing password",
+          });
+        });
+    })
+    .catch((err) => {
+      console.log(err.message);
+      res.json({
+        status: "FAILED",
+        message:
+          "An error has occurred while clearing for expired password reset record",
+      });
+    });
+};
 
 module.exports = router;
