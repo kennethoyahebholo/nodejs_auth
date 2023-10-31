@@ -386,7 +386,7 @@ router.post("/requestPasswordReset", (req, res) => {
   // check if email exist
   User.findOne({ email })
     .then((data) => {
-      if (data.length) {
+      if (data[0].length) {
         // user exists
 
         // user has been verified
@@ -402,7 +402,7 @@ router.post("/requestPasswordReset", (req, res) => {
       } else {
         res.json({
           status: "FAILED",
-          message: "Invalid email entered",
+          message: "No account with the supplied email exist",
         });
       }
     })
