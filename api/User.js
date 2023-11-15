@@ -524,7 +524,7 @@ router.post("/resetPassword", function (req, res) {
           bcrypt
             .compare(resetString, hashedResetString)
             .then((result) => {
-              if (result) {
+              if (result?.length > 0) {
                 // string match
                 // hash the new password
 
