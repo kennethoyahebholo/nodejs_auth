@@ -2,6 +2,8 @@ require("dotenv").config();
 const express = require("express");
 const router = express.Router();
 
+const { handleUserVerification } = require("./controller");
+
 const clientUrl = process.env.CLIENT_URL;
 
 // verify email
