@@ -7,7 +7,8 @@ const cors = require("cors");
 const allowedOrigins = [
   "http://localhost:5000",
   "https://localhost:5000",
-  "https://symphonious-dieffenbachia-874d68.netlify.app/",
+  "http://accessify.netlify.app/",
+  "https://accessify.netlify.app/",
   "*",
 ];
 app.use(
