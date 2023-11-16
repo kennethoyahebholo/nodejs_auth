@@ -2,8 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const {
-  checkForExistingUser,
-  sendResetEmail,
+  sendEmailForPasswordReset,
   handlePasswordReset,
 } = require("./controller");
 
@@ -17,18 +16,7 @@ router.post("/requestPasswordReset", async (req, res) => {
     if (email === "" || redirectUrl === "") {
       throw Error("Empty Input Fields!");
     } else {
-      // const resetString = uuidv4() + _id;
-      // const existingUser = await checkForExistingUser(email);
-
-      // if (!existingUser?.isVerified) {
-      //   throw Error("Email hasn't been verified yet, check you inbox");
-      // } else {
-      //   // await sendResetEmail(existingUser[0], redirectUrl, resetString);
-      //   res.json({
-      //     status: "PENDING",
-      //     message: "Password reset email sent",
-      //   });
-      // }
+      await sendEmailForPasswordReset(email, redirectUrl);
       res.json({
         status: "PENDING",
         message: "Password reset email sent",
@@ -37,7 +25,7 @@ router.post("/requestPasswordReset", async (req, res) => {
   } catch (err) {
     res.json({
       status: "FAILED",
-      message: "failed to reset password",
+      message: "failed to reset password, haba",
     });
   }
 });

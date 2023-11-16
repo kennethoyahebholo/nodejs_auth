@@ -1,45 +1,42 @@
 const { v4: uuidv4 } = require("uuid");
+require("dotenv").config();
 const User = require("../user/model");
 const PasswordReset = require("./model");
 const hashedData = require("../../utils/hashData");
 const verifyHashedData = require("../../utils/verifyHashedData");
 
-const checkForExistingUser = async (email) => {
+const sendEmailForPasswordReset = async (email, redirectUrl) => {
   try {
-    const isUserExisting = await User.find({ email });
-    if (!isUserExisting.length) {
+    const fetchedUser = await User.find({ email });
+    if (!fetchedUser?.length) {
       throw Error("No account with the supplied email exist");
     } else {
-      return isUserExisting;
+      if (!fetchedUser[0]?.isVerified) {
+        throw Error("Email hasn't been verified yet, check your inbox");
+      } else {
+        const { _id, email } = fetchedUser[0];
+        const resetString = uuidv4() + _id;
+        await PasswordReset.deleteMany({ userId: _id });
+        const mailOptions = {
+          from: process.env.AUTH_EMAIL,
+          to: email,
+          subject: "Password Reset",
+          html: `<p>We heard you lost your password</p><p>Don't worry use this link to reset your password</p><p>This link <b>expires in 60 minutes</b>.<p>Press <a href=${
+            redirectUrl + "/" + _id + "/" + resetString
+          } target="_blank"> to proceed</a></p></p>`,
+        };
+        const hashedResetString = await hashedData(resetString);
+        const newPasswordReset = new PasswordReset({
+          userId: _id,
+          resetString: hashedResetString,
+          createdAt: Date.now(),
+          expiredAt: Date.now() + 3600000,
+        });
+
+        await newPasswordReset.save();
+        await sendEmail(mailOptions);
+      }
     }
-  } catch (err) {
-    throw err;
-  }
-};
-
-const sendResetEmail = async ({ _id, email }, redirectUrl, resetString) => {
-  try {
-    const resetString = uuidv4() + _id;
-    await PasswordReset.deleteMany({ userId: _id });
-    const mailOptions = {
-      from: process.env.AUTH_EMAIL,
-      to: email,
-      subject: "Password Reset",
-      html: `<p>We heard you lost your password</p><p>Don't worry use this link to reset your password</p><p>This link <b>expires in 60 minutes</b>.<p>Press <a href=${
-        redirectUrl + "/" + _id + "/" + resetString
-      } target="_blank"> to proceed</a></p></p>`,
-    };
-
-    const hashedResetString = await hashedData(resetString);
-    const newPasswordReset = new PasswordReset({
-      userId: _id,
-      resetString: hashedResetString,
-      createdAt: Date.now(),
-      expiredAt: Date.now() + 3600000,
-    });
-
-    await newPasswordReset.save();
-    await sendEmail(mailOptions);
   } catch (err) {
     throw err;
   }
@@ -81,4 +78,7 @@ const handlePasswordReset = async ({ userId, resetString, newPassword }) => {
   }
 };
 
-module.exports = { checkForExistingUser, sendResetEmail, handlePasswordReset };
+module.exports = {
+  sendEmailForPasswordReset,
+  handlePasswordReset,
+};
