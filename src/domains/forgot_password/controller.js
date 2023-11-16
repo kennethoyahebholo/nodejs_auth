@@ -43,7 +43,7 @@ const sendEmailForPasswordReset = async (email, redirectUrl) => {
   }
 };
 
-const handlePasswordReset = async ({ userId, resetString, newPassword }) => {
+const handlePasswordReset = async (userId, resetString, newPassword) => {
   try {
     const passwordReset = await PasswordReset.find({ userId });
     if (passwordReset?.length > 0) {

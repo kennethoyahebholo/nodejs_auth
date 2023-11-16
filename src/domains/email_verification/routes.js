@@ -8,8 +8,8 @@ const clientUrl = process.env.CLIENT_URL;
 
 // verify email
 router.get("/verify/:userId/:uniqueString", async (req, res) => {
-  let { userId, uniqueString } = req.params;
   try {
+    let { userId, uniqueString } = req.params;
     await handleUserVerification(userId, uniqueString, clientUrl);
   } catch (err) {
     let message =

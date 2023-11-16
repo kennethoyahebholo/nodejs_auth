@@ -42,7 +42,7 @@ const sendVerificationEmail = async ({ _id, email }) => {
   }
 };
 
-const handleUserVerification = async ({ userId, uniqueString, clientUrl }) => {
+const handleUserVerification = async (userId, uniqueString, clientUrl) => {
   try {
     const result = UserVerification.find({ userId });
     if (result.length > 0) {
