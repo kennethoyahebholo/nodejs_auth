@@ -3,7 +3,7 @@ const PasswordReset = require("./model");
 const hashedData = require("../../utils/hashData");
 const verifyHashedData = require("../../utils/verifyHashedData");
 
-const checkForExistingUser = async ({ email, redirectUrl }) => {
+const checkForExistingUser = async (email) => {
   try {
     const isUserExisting = await User.find({ email });
     if (!isUserExisting.length) {
