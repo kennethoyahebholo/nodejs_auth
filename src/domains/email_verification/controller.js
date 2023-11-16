@@ -16,7 +16,7 @@ const sendVerificationEmail = async ({ _id, email }) => {
       to: email,
       subject: "Verify your email",
       html: `<p>Verify your email address to complete the signup and login to your account</p><p>This link <b>expires in 6 hours</b>.<p>Press <a href=${
-        currentUrl + "user/verify/" + _id + "/" + uniqueString
+        currentUrl + "email_verification/verify/" + _id + "/" + uniqueString
       } target="_blank"> to proceed</a></p></p>`,
     };
 
