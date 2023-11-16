@@ -19,7 +19,7 @@ router.post("/requestPasswordReset", async (req, res) => {
     //   throw Error("Invalid email entered");
     // } else {
     // const resetString = uuidv4() + _id;
-    const existingUser = await checkForExistingUser(email);
+    // const existingUser = await checkForExistingUser(email);
 
     if (!existingUser.isVerified) {
       res.json({
