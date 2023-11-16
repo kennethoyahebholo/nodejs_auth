@@ -79,7 +79,8 @@ const handleUserVerification = async (userId, uniqueString, clientUrl) => {
       res.redirect(`${clientUrl}auth/verified?error=true&message=${message}`);
     }
   } catch (err) {
-    throw err;
+    let message = "hello world";
+    res.redirect(`${clientUrl}auth/verified?error=true&message=${message}`);
   }
 };
 
