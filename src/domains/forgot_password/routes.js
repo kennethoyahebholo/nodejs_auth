@@ -12,29 +12,29 @@ const {
 router.post("/requestPasswordReset", async (req, res) => {
   try {
     const { email, redirectUrl } = req.body;
-    email = email.trim();
-    redirectUrl = phoneNumber.trim();
-    if (email === "" || redirectUrl === "") {
-      throw Error("Empty Input Fields!");
-    } else if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
-      throw Error("Invalid email entered");
-    } else {
-      const resetString = uuidv4() + _id;
-      const existingUser = await checkForExistingUser(email);
+    // email = email.trim();
+    // redirectUrl = phoneNumber.trim();
+    // if (email === "" || redirectUrl === "") {
+    //   throw Error("Empty Input Fields!");
+    // } else if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
+    //   throw Error("Invalid email entered");
+    // } else {
+    const resetString = uuidv4() + _id;
+    const existingUser = await checkForExistingUser(email);
 
-      if (!existingUser.isVerified) {
-        res.json({
-          status: "FAILED",
-          message: "Email hasn't been verified yet, check you inbox",
-        });
-      } else {
-        await sendResetEmail(existingUser[0], redirectUrl, resetString);
-        res.json({
-          status: "PENDING",
-          message: "Password reset email sent",
-        });
-      }
+    if (!existingUser.isVerified) {
+      res.json({
+        status: "FAILED",
+        message: "Email hasn't been verified yet, check you inbox",
+      });
+    } else {
+      await sendResetEmail(existingUser[0], redirectUrl, resetString);
+      res.json({
+        status: "PENDING",
+        message: "Password reset email sent",
+      });
     }
+    // }
   } catch (err) {
     res.json({
       status: "FAILED",
