@@ -4,7 +4,12 @@ require("./config/db");
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const allowedOrigins = "*";
+const allowedOrigins = [
+  "http://localhost:5000",
+  "https://localhost:5000",
+  "https://symphonious-dieffenbachia-874d68.netlify.app/",
+  "*",
+];
 app.use(
   cors({
     origin: function (origin, callback) {
