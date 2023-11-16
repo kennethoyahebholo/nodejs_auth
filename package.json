@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "dev": "node -r dotenv/config src/index.js dotenv_config_path=env/local.env",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Oyahebholo Kenneth Izosea",
