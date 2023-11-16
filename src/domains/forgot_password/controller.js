@@ -1,3 +1,4 @@
+const { v4: uuidv4 } = require("uuid");
 const User = require("../user/model");
 const PasswordReset = require("./model");
 const hashedData = require("../../utils/hashData");
@@ -18,6 +19,7 @@ const checkForExistingUser = async (email) => {
 
 const sendResetEmail = async ({ _id, email }, redirectUrl, resetString) => {
   try {
+    const resetString = uuidv4() + _id;
     await PasswordReset.deleteMany({ userId: _id });
     const mailOptions = {
       from: process.env.AUTH_EMAIL,

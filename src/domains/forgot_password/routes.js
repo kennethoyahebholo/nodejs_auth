@@ -1,4 +1,3 @@
-const { v4: uuidv4 } = require("uuid");
 const express = require("express");
 const router = express.Router();
 
@@ -20,27 +19,20 @@ router.post("/requestPasswordReset", async (req, res) => {
     //   throw Error("Invalid email entered");
     // } else {
     // const resetString = uuidv4() + _id;
-    // const existingUser = await checkForExistingUser(email);
+    const existingUser = await checkForExistingUser(email);
 
-    // if (!existingUser.isVerified) {
-    //   res.json({
-    //     status: "FAILED",
-    //     message: "Email hasn't been verified yet, check you inbox",
-    //   });
-    // } else {
-    //   await sendResetEmail(existingUser[0], redirectUrl, resetString);
-    //   res.json({
-    //     status: "PENDING",
-    //     message: "Password reset email sent",
-    //   });
-    // }
-    res.json({
-      status: "PENDING",
-      message: "Password reset email sent",
-      email,
-      redirectUrl,
-      // id: resetString,
-    });
+    if (!existingUser.isVerified) {
+      res.json({
+        status: "FAILED",
+        message: "Email hasn't been verified yet, check you inbox",
+      });
+    } else {
+      // await sendResetEmail(existingUser[0], redirectUrl, resetString);
+      res.json({
+        status: "PENDING",
+        message: "Password reset email sent",
+      });
+    }
     // }
   } catch (err) {
     res.json({
