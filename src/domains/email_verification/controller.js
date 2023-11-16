@@ -42,7 +42,7 @@ const sendVerificationEmail = async ({ _id, email }) => {
   }
 };
 
-const handleUserVerification = async (userId, uniqueString, clientUrl) => {
+const handleUserVerification = async (userId, uniqueString, clientUrl, res) => {
   try {
     const result = await UserVerification.find({ userId });
     if (result.length > 0) {
@@ -79,7 +79,7 @@ const handleUserVerification = async (userId, uniqueString, clientUrl) => {
       res.redirect(`${clientUrl}auth/verified?error=true&message=${message}`);
     }
   } catch (err) {
-    let message = "hello world";
+    let message = "An error occurred while verifying the account";
     res.redirect(`${clientUrl}auth/verified?error=true&message=${message}`);
   }
 };

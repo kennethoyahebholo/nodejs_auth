@@ -7,9 +7,9 @@ const { handleUserVerification } = require("./controller");
 // verify email
 router.get("/verify/:userId/:uniqueString", async (req, res) => {
   const clientUrl = process.env.CLIENT_URL;
-  let { userId, uniqueString } = req.params;
   try {
-    await handleUserVerification(userId, uniqueString, clientUrl);
+    let { userId, uniqueString } = req.params;
+    await handleUserVerification(userId, uniqueString, clientUrl, res);
   } catch (err) {
     let message =
       "An error has occurred while checking for existing user verification record";
