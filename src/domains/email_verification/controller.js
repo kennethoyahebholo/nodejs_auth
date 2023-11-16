@@ -44,7 +44,7 @@ const sendVerificationEmail = async ({ _id, email }) => {
 
 const handleUserVerification = async (userId, uniqueString, clientUrl) => {
   try {
-    const result = UserVerification.find({ userId });
+    const result = await UserVerification.find({ userId });
     if (result.length > 0) {
       const { expiredAt } = result[0];
       const hashedUniqueString = result[0].uniqueString;
