@@ -499,7 +499,7 @@ router.post("/resetPassword", function (req, res) {
 
   PasswordReset.find({ userId })
     .then((result) => {
-      if (result > 0) {
+      if (result?.length > 0) {
         //password record is found so we proceed
         const { expiredAt } = result[0];
         const hashedResetString = result[0].resetString;
@@ -524,7 +524,7 @@ router.post("/resetPassword", function (req, res) {
           bcrypt
             .compare(resetString, hashedResetString)
             .then((result) => {
-              if (result?.length > 0) {
+              if (result) {
                 // string match
                 // hash the new password
 
