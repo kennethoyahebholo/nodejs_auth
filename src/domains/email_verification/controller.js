@@ -65,7 +65,7 @@ const handleUserVerification = async (userId, uniqueString, clientUrl) => {
         if (hashedString) {
           await User.updateOne({ _id: userId }, { isVerified: true });
           await UserVerification.deleteOne({ userId });
-          res.redirect(`${clientUrl}auth/verified/`);
+          return hashedString;
         } else {
           // existing record, incorrect link
           let message = "Invalid verification details passed, check your inbox";

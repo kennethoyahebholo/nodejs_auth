@@ -10,7 +10,14 @@ const clientUrl = process.env.CLIENT_URL;
 router.get("/verify/:userId/:uniqueString", async (req, res) => {
   try {
     let { userId, uniqueString } = req.params;
-    await handleUserVerification(userId, uniqueString, clientUrl);
+    const result = await handleUserVerification(
+      userId,
+      uniqueString,
+      clientUrl
+    );
+    if (result) {
+      res.redirect(`${clientUrl}auth/verified/`);
+    }
   } catch (err) {
     let message =
       "An error has occurred while checking for existing user verification record";
