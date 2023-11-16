@@ -11,7 +11,7 @@ const {
 // Password Reset
 router.post("/requestPasswordReset", async (req, res) => {
   try {
-    const { email, redirectUrl } = req.body;
+    let { email, redirectUrl } = req.body;
     email = email.trim();
     redirectUrl = phoneNumber.trim();
     if (email === "" || redirectUrl === "") {
@@ -19,7 +19,7 @@ router.post("/requestPasswordReset", async (req, res) => {
     } else if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
       throw Error("Invalid email entered");
     } else {
-      // const resetString = uuidv4() + _id;
+      const resetString = uuidv4() + _id;
       // const existingUser = await checkForExistingUser(email);
 
       // if (!existingUser.isVerified) {
