@@ -21,11 +21,8 @@ router.post("/requestPasswordReset", async (req, res) => {
     // const resetString = uuidv4() + _id;
     // const existingUser = await checkForExistingUser(email);
 
-    if (!existingUser.isVerified) {
-      res.json({
-        status: "FAILED",
-        message: "Email hasn't been verified yet, check you inbox",
-      });
+    if (!existingUser?.isVerified) {
+      throw Error("Email hasn't been verified yet, check you inbox");
     } else {
       // await sendResetEmail(existingUser[0], redirectUrl, resetString);
       res.json({
