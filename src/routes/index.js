@@ -3,8 +3,10 @@ const router = express.Router();
 
 const userRoutes = require("./../domains/user");
 const forgetPasswordRoutes = require("./../domains/forgot_password");
-const userVerification = require("./../domains/user_verification");
+const userVerificationRoutes = require("./../domains/user_verification");
 
-router.use("/user", userRoutes, forgetPasswordRoutes, userVerification);
+router.use("/user", userRoutes);
+router.use("/user", forgetPasswordRoutes);
+router.use("/user", userVerificationRoutes);
 
 module.exports = router;
