@@ -4,6 +4,7 @@ const User = require("../user/model");
 const PasswordReset = require("./model");
 const hashedData = require("../../utils/hashData");
 const verifyHashedData = require("../../utils/verifyHashedData");
+const sendEmail = require("../../utils/sendEmail");
 
 const sendEmailForPasswordReset = async (email, redirectUrl) => {
   try {
