@@ -1,7 +1,7 @@
 const { v4: uuidv4 } = require("uuid");
 const hashedData = require("../../utils/hashData");
 const sendEmail = require("../../utils/sendEmail");
-const User = require("./model");
+const User = require("../user/model");
 const UserVerification = require("./model");
 const verifyHashedData = require("../../utils/verifyHashedData");
 
@@ -65,7 +65,7 @@ const handleUserVerification = async (userId, uniqueString, clientUrl) => {
         if (hashedString) {
           await User.updateOne({ _id: userId }, { isVerified: true });
           await UserVerification.deleteOne({ userId });
-          return hashedString;
+          res.redirect(`${clientUrl}auth/verified/`);
         } else {
           // existing record, incorrect link
           let message = "Invalid verification details passed, check your inbox";
