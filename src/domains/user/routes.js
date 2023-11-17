@@ -30,7 +30,7 @@ router.post("/signup", async (req, res) => {
       throw Error("Invalid first name entered");
     } else if (!/^[a-zA-Z ]*$/.test(lastName)) {
       throw Error("Invalid last name entered");
-    } else if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
+    } else if (!/^[\w-\.+]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
       throw Error("Invalid email entered");
     } else if (!/^[0-9]{11}$/.test(phoneNumber)) {
       throw Error("Invalid phone number entered (11 digits required)");

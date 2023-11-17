@@ -58,10 +58,8 @@ const getAllUsers = async (req) => {
   try {
     const { keyword, filters, filterStatus } = req.query;
 
-    // Constructing a regex pattern for case-insensitive search
     const regex = new RegExp(keyword || "", "i");
 
-    // Constructing the filter object based on the provided query parameters
     const filter = {};
 
     if (filterStatus === "inactive") {
@@ -69,12 +67,6 @@ const getAllUsers = async (req) => {
     } else if (filterStatus === "active") {
       filter.isVerified = true;
     }
-    // if (filterStatus === "inactive") {
-    //   filter.isVerified = false;
-    // }
-    // if (filterStatus === "active") {
-    //   filter.isVerified = true;
-    // }
     if (keyword) {
       filter.$or = [
         { firstName: { $regex: regex } },
@@ -83,16 +75,13 @@ const getAllUsers = async (req) => {
       ];
     }
 
-    // Apply additional filters based on the 'filters' parameter if needed
     if (filters) {
-      // Assuming 'filters' is an object containing specific filter criteria
-      // Modify this section based on your actual filtering requirements
       const parsedFilters = JSON.parse(filters);
       Object.assign(filter, parsedFilters);
     }
 
     const users = await User.find(filter);
-    const totalUsers = await User.countDocuments(filter);
+    const totalUsers = await User.countDocuments({ ...filter });
 
     return { users, totalUsers };
   } catch (err) {
