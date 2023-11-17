@@ -105,7 +105,7 @@ router.get("/getAllUsers", async (req, res) => {
     return res.send({
       message: "Users fetched successfully",
       data: {
-        users: users,
+        users,
       },
     });
   } catch (err) {

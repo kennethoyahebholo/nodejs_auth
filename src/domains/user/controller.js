@@ -56,38 +56,30 @@ const authenticateUser = async (email, password) => {
 
 const getAllUsers = async (req) => {
   try {
-    let query = [
-      {
-        $lookup: {
-          from: "users",
-          localField: "created_by",
-          foreignField: "_id",
-          as: "creator",
-        },
-      },
-      { $unwind: "$creator" },
-    ];
+    const { keyword, filters } = req.query;
 
-    if (req.query.keyword && req.query.keyword != "") {
-      query.push({
-        $match: {
-          $or: [
-            {
-              firstName: { $regex: req.query.keyword },
-            },
-            {
-              lastName: { $regex: req.query.keyword },
-            },
-            {
-              email: { $regex: req.query.keyword },
-            },
-          ],
-        },
-      });
+    // Constructing a regex pattern for case-insensitive search
+    const regex = new RegExp(keyword || "", "i");
+
+    // Constructing the filter object based on the provided query parameters
+    const filter = {};
+    if (keyword) {
+      filter.$or = [
+        { firstName: { $regex: regex } },
+        { lastName: { $regex: regex } },
+        { email: { $regex: regex } },
+      ];
     }
 
-    let users = await User.aggregate(query);
-    // users.map((user) => User.hydrate(user));
+    // Apply additional filters based on the 'filters' parameter if needed
+    if (filters) {
+      // Assuming 'filters' is an object containing specific filter criteria
+      // Modify this section based on your actual filtering requirements
+      Object.assign(filter, filters);
+    }
+
+    const users = await User.find(filter);
+
     return users;
   } catch (err) {
     throw err;
