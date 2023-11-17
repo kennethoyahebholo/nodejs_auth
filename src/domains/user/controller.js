@@ -92,8 +92,9 @@ const getAllUsers = async (req) => {
     }
 
     const users = await User.find(filter);
+    const totalUsers = await User.countDocuments(filter);
 
-    return users;
+    return { users, totalUsers };
   } catch (err) {
     throw err;
   }

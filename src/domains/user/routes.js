@@ -101,11 +101,12 @@ router.post("/signin", async (req, res) => {
 // getAllUser
 router.get("/getAllUsers", async (req, res) => {
   try {
-    let users = await getAllUsers(req);
+    let { users, totalUsers } = await getAllUsers(req);
     return res.send({
       message: "Users fetched successfully",
       data: {
         users,
+        count: totalUsers,
       },
     });
   } catch (err) {
