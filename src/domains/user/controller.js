@@ -56,7 +56,7 @@ const authenticateUser = async (email, password) => {
 
 const getAllUsers = async (req) => {
   try {
-    const { keyword, filters, status } = req.query;
+    const { keyword, filters, filterStatus } = req.query;
 
     // Constructing a regex pattern for case-insensitive search
     const regex = new RegExp(keyword || "", "i");
@@ -64,9 +64,12 @@ const getAllUsers = async (req) => {
     // Constructing the filter object based on the provided query parameters
     const filter = {};
 
-    if (status === "active") {
-      filter.isVerified = true;
-    } else if (status === "inactive") {
+    // if (status === "active") {
+    //   filter.isVerified = true;
+    // } else if (status === "inactive") {
+    //   filter.isVerified = false;
+    // }
+    if (filterStatus === "inactive") {
       filter.isVerified = false;
     }
     if (keyword) {
