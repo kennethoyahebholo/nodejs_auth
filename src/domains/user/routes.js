@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 //custom functions
-const { createUser, authenticateUser } = require("./controller");
+const { createUser, authenticateUser, getAllUsers } = require("./controller");
 const { sendVerificationEmail } = require("../email_verification/controller");
 
 // sign up
@@ -90,6 +90,30 @@ router.post("/signin", async (req, res) => {
         });
       }
     }
+  } catch (err) {
+    res.json({
+      status: "FAILED",
+      message: err.message,
+    });
+  }
+});
+
+// getAllUser
+router.get("/getAllUsers", async (req, res) => {
+  try {
+    let users = await getAllUsers(req);
+    return res.send({
+      message: "Users fetched successfully",
+      data: {
+        users: users.map((user) => User.hydrate(user)),
+        meta: {
+          total: total,
+          currentPage: page,
+          perPage: perPage,
+          totalPages: Math.ceil(total / perPage),
+        },
+      },
+    });
   } catch (err) {
     res.json({
       status: "FAILED",

@@ -54,4 +54,43 @@ const authenticateUser = async (email, password) => {
   }
 };
 
-module.exports = { createUser, authenticateUser };
+const getAllUsers = async (req) => {
+  try {
+    let query = [
+      {
+        $lookup: {
+          from: "users",
+          localField: "",
+          foreignField: "_id",
+          as: "",
+        },
+      },
+      { $unwind: "$creator" },
+    ];
+
+    if (req.query.keyword && req.query.keyword != "") {
+      query.push({
+        $match: {
+          $or: [
+            {
+              firstName: { $regex: req.query.keyword },
+            },
+            {
+              lastName: { $regex: req.query.keyword },
+            },
+            {
+              email: { $regex: req.query.keyword },
+            },
+          ],
+        },
+      });
+    }
+
+    let users = await User.aggregate(query);
+    return users;
+  } catch (err) {
+    throw err;
+  }
+};
+
+module.exports = { createUser, authenticateUser, getAllUsers };
