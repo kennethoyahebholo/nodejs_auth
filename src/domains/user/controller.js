@@ -87,7 +87,7 @@ const getAllUsers = async (req) => {
     }
 
     let users = await User.aggregate(query);
-    users.map((user) => User.hydrate(user));
+    // users.map((user) => User.hydrate(user));
     return users;
   } catch (err) {
     throw err;
