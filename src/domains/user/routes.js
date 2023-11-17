@@ -105,13 +105,7 @@ router.get("/getAllUsers", async (req, res) => {
     return res.send({
       message: "Users fetched successfully",
       data: {
-        users: users.map((user) => User.hydrate(user)),
-        meta: {
-          total: total,
-          currentPage: page,
-          perPage: perPage,
-          totalPages: Math.ceil(total / perPage),
-        },
+        users,
       },
     });
   } catch (err) {
