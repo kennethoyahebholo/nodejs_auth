@@ -60,9 +60,9 @@ const getAllUsers = async (req) => {
       {
         $lookup: {
           from: "users",
-          localField: "",
+          localField: "created_by",
           foreignField: "_id",
-          as: "",
+          as: "creator",
         },
       },
       { $unwind: "$creator" },
