@@ -56,13 +56,19 @@ const authenticateUser = async (email, password) => {
 
 const getAllUsers = async (req) => {
   try {
-    const { keyword, filters } = req.query;
+    const { keyword, filters, status } = req.query;
 
     // Constructing a regex pattern for case-insensitive search
     const regex = new RegExp(keyword || "", "i");
 
     // Constructing the filter object based on the provided query parameters
     const filter = {};
+
+    if (status === "active") {
+      filter.isVerified = true;
+    } else if (status === "inactive") {
+      filter.isVerified = false;
+    }
     if (keyword) {
       filter.$or = [
         { firstName: { $regex: regex } },
@@ -75,7 +81,8 @@ const getAllUsers = async (req) => {
     if (filters) {
       // Assuming 'filters' is an object containing specific filter criteria
       // Modify this section based on your actual filtering requirements
-      Object.assign(filter, filters);
+      const parsedFilters = JSON.parse(filters);
+      Object.assign(filter, parsedFilters);
     }
 
     const users = await User.find(filter);
