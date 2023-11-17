@@ -64,14 +64,17 @@ const getAllUsers = async (req) => {
     // Constructing the filter object based on the provided query parameters
     const filter = {};
 
-    // if (status === "active") {
-    //   filter.isVerified = true;
-    // } else if (status === "inactive") {
-    //   filter.isVerified = false;
-    // }
     if (filterStatus === "inactive") {
       filter.isVerified = false;
+    } else if (filterStatus === "active") {
+      filter.isVerified = true;
     }
+    // if (filterStatus === "inactive") {
+    //   filter.isVerified = false;
+    // }
+    // if (filterStatus === "active") {
+    //   filter.isVerified = true;
+    // }
     if (keyword) {
       filter.$or = [
         { firstName: { $regex: regex } },
