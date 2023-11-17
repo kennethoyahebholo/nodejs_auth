@@ -2,7 +2,12 @@ const express = require("express");
 const router = express.Router();
 
 //custom functions
-const { createUser, authenticateUser, getAllUsers } = require("./controller");
+const {
+  createUser,
+  authenticateUser,
+  getAllUsers,
+  getUserById,
+} = require("./controller");
 const { sendVerificationEmail } = require("../email_verification/controller");
 
 // sign up
@@ -108,6 +113,32 @@ router.get("/getAllUsers", async (req, res) => {
         users,
         count: totalUsers,
       },
+    });
+  } catch (err) {
+    res.json({
+      status: "FAILED",
+      message: err.message,
+    });
+  }
+});
+
+//get a user by ID
+router.get("/getUserById/:userId", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const user = await getUserById(userId);
+
+    if (!user) {
+      return res.json({
+        status: "FAILED",
+        message: "User not found",
+      });
+    }
+
+    return res.json({
+      status: "SUCCESS",
+      message: "User fetched successfully",
+      data: user,
     });
   } catch (err) {
     res.json({
