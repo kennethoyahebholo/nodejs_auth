@@ -50,8 +50,7 @@ const authenticateUser = async (email, password) => {
       }
     }
   } catch (err) {
-    console.log(err);
-    throw Error("User not found");
+    throw err;
   }
 };
 
