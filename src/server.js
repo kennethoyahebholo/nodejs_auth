@@ -1,9 +1,9 @@
 require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
 require("./config/db");
 
-const express = require("express");
 const app = express();
-const cors = require("cors");
 const allowedOrigins = [
   "http://localhost:5000",
   "https://localhost:5000",

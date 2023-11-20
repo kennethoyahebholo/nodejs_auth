@@ -98,7 +98,7 @@ router.post("/signin", async (req, res) => {
   } catch (err) {
     res.json({
       status: "FAILED",
-      message: err.message,
+      message: "An error occurred while authenticating the user",
     });
   }
 });
